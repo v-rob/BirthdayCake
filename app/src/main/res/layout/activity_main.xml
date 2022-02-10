@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Happy Birthday!"
+        android:text="A Very Merry Unbirthday To You!"
         android:textColor="#FF9800"
         android:textSize="30sp" />
 
