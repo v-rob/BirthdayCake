@@ -140,6 +140,10 @@ public class CakeView extends SurfaceView {
                     candleWidth / 2, cakeTop);
         }
 
+        drawChecker(canvas);
+    }//onDraw
+
+    public void drawChecker(Canvas canvas){
         //draws the checkerboard on the position where the person touched the view
         // - 1 to keep it hidden until touched
         if(cakeModel.squareX > -1 && cakeModel.squareY > -1){
@@ -152,7 +156,7 @@ public class CakeView extends SurfaceView {
             //bottom right
             canvas.drawRect(cakeModel.squareX, cakeModel.squareY, cakeModel.squareX + 50,cakeModel.squareY + 50, square1);
         }
-    }//onDraw
+    }
 
 }//class CakeView
 
