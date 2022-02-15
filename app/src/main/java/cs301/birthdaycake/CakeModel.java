@@ -7,4 +7,6 @@ public class CakeModel {
     public boolean hasCandles = true;
     public int balloonX = 1000;
     public int balloonY = 1000;
+    public float touchX = -1;
+    public float touchY = -1;
 }

@@ -43,6 +43,8 @@ public class CakeController implements View.OnClickListener,
     public boolean onTouch(View view, MotionEvent motionEvent) {
         this.cakeModel.balloonX = (int) motionEvent.getX();
         this.cakeModel.balloonY = (int) motionEvent.getY();
+        cakeModel.touchX = motionEvent.getX();
+        cakeModel.touchY = motionEvent.getY();
         this.cakeView.invalidate();
         return true;
     }
