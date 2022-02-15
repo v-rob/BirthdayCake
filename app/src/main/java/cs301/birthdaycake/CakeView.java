@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 
+import java.util.Random;
+
 public class CakeView extends SurfaceView {
     private CakeModel cakeModel;
 
@@ -17,6 +19,12 @@ public class CakeView extends SurfaceView {
     Paint outerFlamePaint = new Paint();
     Paint innerFlamePaint = new Paint();
     Paint wickPaint = new Paint();
+    Paint square1 = new Paint();
+    Paint square2 = new Paint();
+    Paint textPaint = new Paint();
+    Paint balloonPaint = new Paint();
+    Paint stringPaint = new Paint();
+    Paint[] allPaint = new Paint[]{cakePaint, frostingPaint, candlePaint, outerFlamePaint, innerFlamePaint, wickPaint, balloonPaint, stringPaint, textPaint};
 
     /* These constants define the dimensions of the cake.  While defining constants for things
         like this is good practice, we could be calculating these better by detecting
@@ -34,6 +42,14 @@ public class CakeView extends SurfaceView {
     public static final float wickWidth = 6.0f;
     public static final float outerFlameRadius = 30.0f;
     public static final float innerFlameRadius = 15.0f;
+    public static final float balloonWidth = 100f;
+    public static final float balloonHeight = 140f;
+    public static final float stringLength = 200f;
+    public static final float stringWidth = 10f;
+    public static final float rainbowSpeed = 10;
+
+    //hehehehhehehehehehehfehfhauGBOESB VSDnjg bEOWJNFOI N
+    Random r = new Random();
 
     /**
      * ctor must be overridden here as per standard Java inheritance practice.  We need it
@@ -60,6 +76,17 @@ public class CakeView extends SurfaceView {
         innerFlamePaint.setStyle(Paint.Style.FILL);
         wickPaint.setColor(Color.BLACK);
         wickPaint.setStyle(Paint.Style.FILL);
+        balloonPaint.setColor(0xFFFF0000);
+        balloonPaint.setStyle(Paint.Style.FILL);
+        stringPaint.setColor(0xFFAAAAAA);
+        stringPaint.setStyle(Paint.Style.FILL);
+        textPaint.setColor(0xFF900000);
+        textPaint.setTextSize(40f);
+
+        square1.setColor(Color.GREEN);
+        square1.setStyle(Paint.Style.FILL);
+        square2.setColor(Color.RED);
+        square2.setStyle(Paint.Style.FILL);
 
         setBackgroundColor(Color.WHITE);  //better than black default
     }
@@ -95,6 +122,22 @@ public class CakeView extends SurfaceView {
         canvas.drawRect(wickLeft, wickTop, wickLeft + wickWidth, wickTop + wickHeight, wickPaint);
     }
 
+    public void drawBalloon(Canvas canvas, int x, int y) {
+        canvas.drawOval(x-balloonWidth/2, y-balloonHeight/2, x+balloonWidth/2,
+                y+balloonHeight/2, balloonPaint);
+        canvas.drawRect(x-stringWidth/2, y+balloonHeight/2, x+stringWidth/2,
+                y+balloonHeight/2+stringLength, stringPaint);
+    }
+    public void stepRainbow(Paint paint) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(paint.getColor(), hsv);
+        float hue = hsv[0]+rainbowSpeed;
+        if (hue > 360){
+            hue = 0;
+        }
+        paint.setColor(Color.HSVToColor(new float[]{hue,hsv[1],hsv[2]}));
+    }
+
     /**
      * onDraw is like "paint" in a regular Java program.  While a Canvas is
      * conceptually similar to a Graphics in javax.swing, the implementation has
@@ -105,6 +148,9 @@ public class CakeView extends SurfaceView {
     @Override
     public void onDraw(Canvas canvas)
     {
+        for (Paint each : allPaint) {
+            stepRainbow(each);
+        }
         //top and bottom are used to keep a running tally as we progress down the cake layers
         float top = cakeTop;
         float bottom = cakeTop + frostHeight;
@@ -131,8 +177,32 @@ public class CakeView extends SurfaceView {
         for (int i = 1; i <= this.cakeModel.numCandles; i++) {
             drawCandle(canvas, cakeLeft + cakeWidth * i / (this.cakeModel.numCandles + 1) -
                     candleWidth / 2, cakeTop);
+
+            if (cakeModel.touchX != -1 && cakeModel.touchY != -1) {
+                canvas.drawText("X-Coordinate: " + cakeModel.touchX + " " + "Y-Coordinate: " + cakeModel.touchY, 400f, 900f, textPaint);
+            }
         }
+
+        //stepRainbow(balloonPaint);
+        drawBalloon(canvas, cakeModel.balloonX, cakeModel.balloonY);
+        drawChecker(canvas);
+        this.invalidate();
     }//onDraw
+
+    public void drawChecker(Canvas canvas){
+        //draws the checkerboard on the position where the person touched the view
+        // - 1 to keep it hidden until touched
+        if(cakeModel.squareX > -1 && cakeModel.squareY > -1){
+            //top left
+            canvas.drawRect(cakeModel.squareX - 50, cakeModel.squareY - 50, cakeModel.squareX, cakeModel.squareY,square1);
+            //top right
+            canvas.drawRect(cakeModel.squareX,cakeModel.squareY - 50, cakeModel.squareX + 50,cakeModel.squareY,square2);
+            //bottom left
+            canvas.drawRect(cakeModel.squareX - 50, cakeModel.squareY, cakeModel.squareX,cakeModel.squareY + 50, square2);
+            //bottom right
+            canvas.drawRect(cakeModel.squareX, cakeModel.squareY, cakeModel.squareX + 50,cakeModel.squareY + 50, square1);
+        }
+    }
 
 }//class CakeView
 
