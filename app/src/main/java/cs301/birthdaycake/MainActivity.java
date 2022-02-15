@@ -26,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
 
         SeekBar numCandles = findViewById(R.id.numCandles);
         numCandles.setOnSeekBarChangeListener(cakeController);
+
+        Button ohNo = findViewById(R.id.ohNo);
+        View.OnTouchListener epilepsyTouchListener = new CrazyTouchListener(cakeView);
+        ohNo.setOnTouchListener(epilepsyTouchListener);
     }
 
     public void goodbye(View button) {
